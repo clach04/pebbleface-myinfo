@@ -52,7 +52,7 @@ static BitmapLayer *background_layer;
 
 void handle_battery(BatteryChargeState charge_state) {
 
-    if (charge_state.is_charging) {
+    /* if (charge_state.is_charging) {
         bitmap_layer_set_bitmap(layer_batt_img, img_battery_charge);
 
     } else {
@@ -78,19 +78,19 @@ void handle_battery(BatteryChargeState charge_state) {
             bitmap_layer_set_bitmap(layer_batt_img, img_battery_100);
     }
     charge_percent = charge_state.charge_percent;
-  }
+  } */
 }
 
 void handle_bluetooth(bool connected) {
  if(!connected) {
     //vibe!
     vibes_long_pulse();
-   layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), !connected);	
+   //layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), !connected);	
    layer_set_hidden(text_layer_get_layer(text_layer), !connected);	
 	 
   }
-   layer_set_hidden(bitmap_layer_get_layer(bluetooth_layer), !connected);	
-   layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), connected);	
+   //layer_set_hidden(bitmap_layer_get_layer(bluetooth_layer), !connected);	
+   //layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), connected);	
    layer_set_hidden(text_layer_get_layer(text_layer), !connected);	
 }
 
@@ -106,9 +106,12 @@ static void requestUpdate();
 static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
 
   static char time_text[] = "00:00 P";
-  static char day_text[] = "xxxx-xx-xx";
+  //static char day_text[] = "xxxx-xx-xx";
+  static char day_text[] = "xxx, xx";
 
   char *time_format;
+  char *day_format;
+  day_format = "%a, %d";
 
   if (units_changed & MINUTE_UNIT) {
     if (clock_is_24h_style()) {
@@ -117,7 +120,8 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
 #ifdef PBL_PLATFORM_EMERY
       time_format = "%I:%M %p";
 #else
-      time_format = "%I:%M";
+      //time_format = "%I:%M";
+      time_format = "%I:%M %p";      
 #endif
 	}
 
@@ -133,7 +137,8 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
   }
 
   if (units_changed & DAY_UNIT) {
-    strftime(day_text, sizeof(day_text), "%F", tick_time);
+    //strftime(day_text, sizeof(day_text), "%F", tick_time);
+    strftime(day_text, sizeof(day_text), day_format, tick_time);
     text_layer_set_text(day_layer, day_text);
   }
 }
@@ -213,7 +218,7 @@ static void do_init(void) {
 	layer_batt_img  = bitmap_layer_create(GRect(2, 19, 22, 7));
 #endif
     bitmap_layer_set_bitmap(layer_batt_img, img_battery_100);
-	layer_add_child(window_layer, bitmap_layer_get_layer(layer_batt_img));
+	//layer_add_child(window_layer, bitmap_layer_get_layer(layer_batt_img));
 
 	
 #if PBL_PLATFORM_CHALK
@@ -221,11 +226,13 @@ static void do_init(void) {
 #elif PBL_PLATFORM_EMERY
   day_layer = text_layer_create(GRect(2, -2, 142, 16));
 #else
-  day_layer = text_layer_create(GRect(2, -2, 142, 16));
+  //day_layer = text_layer_create(GRect(2, -2, 142, 16));
+  day_layer = text_layer_create(GRect(0, -1, 142, 34));
 #endif	
   text_layer_set_text_color(day_layer, GColorWhite);
   text_layer_set_background_color(day_layer, GColorClear);
-  text_layer_set_font(day_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  //text_layer_set_font(day_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  text_layer_set_font(day_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
 #ifdef PBL_PLATFORM_CHALK
   text_layer_set_text_alignment(day_layer, GTextAlignmentCenter);
 #else
@@ -286,7 +293,7 @@ static void do_init(void) {
 #endif	
   bluetooth_layer = bitmap_layer_create(frame2);
   bitmap_layer_set_bitmap(bluetooth_layer, bluetooth_image);
-  layer_add_child(window_layer, bitmap_layer_get_layer(bluetooth_layer));
+  //layer_add_child(window_layer, bitmap_layer_get_layer(bluetooth_layer));
 
 	
 	
@@ -299,7 +306,7 @@ static void do_init(void) {
 #endif
   no_bluetooth_layer = bitmap_layer_create(frame3);
   bitmap_layer_set_bitmap(no_bluetooth_layer, no_bluetooth_image);
-  layer_add_child(window_layer, bitmap_layer_get_layer(no_bluetooth_layer));
+  //layer_add_child(window_layer, bitmap_layer_get_layer(no_bluetooth_layer));
 
 	
 	
@@ -314,7 +321,7 @@ static void do_init(void) {
 
 	
   // handlers
-    battery_state_service_subscribe(&handle_battery);
+    //battery_state_service_subscribe(&handle_battery);
     bluetooth_connection_service_subscribe(&handle_bluetooth);
 	
   // draw first frame
@@ -323,14 +330,14 @@ static void do_init(void) {
 
 static void do_deinit(void) {
   tick_timer_service_unsubscribe();
-  battery_state_service_unsubscribe();
+  //battery_state_service_unsubscribe();
   bluetooth_connection_service_unsubscribe();
 	
   text_layer_destroy(time_layer);
   text_layer_destroy(day_layer);
 	
   layer_remove_from_parent(bitmap_layer_get_layer(bluetooth_layer));
-  bitmap_layer_destroy(bluetooth_layer);
+  //bitmap_layer_destroy(bluetooth_layer);
   gbitmap_destroy(bluetooth_image);
   bluetooth_image = NULL;
 	
@@ -339,7 +346,7 @@ static void do_deinit(void) {
   gbitmap_destroy(background_image);
   background_image = NULL;
 	
-  layer_remove_from_parent(bitmap_layer_get_layer(layer_batt_img));
+  //layer_remove_from_parent(bitmap_layer_get_layer(layer_batt_img));
   bitmap_layer_destroy(layer_batt_img);
 	
   gbitmap_destroy(img_battery_100);
