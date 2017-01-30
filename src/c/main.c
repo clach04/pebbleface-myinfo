@@ -85,12 +85,12 @@ void handle_bluetooth(bool connected) {
  if(!connected) {
     //vibe!
     vibes_long_pulse();
-   //layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), !connected);	
+   layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), !connected);	
    layer_set_hidden(text_layer_get_layer(text_layer), !connected);	
 	 
   }
    //layer_set_hidden(bitmap_layer_get_layer(bluetooth_layer), !connected);	
-   //layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), connected);	
+   layer_set_hidden(bitmap_layer_get_layer(no_bluetooth_layer), connected);	
    layer_set_hidden(text_layer_get_layer(text_layer), !connected);	
 }
 
@@ -120,8 +120,7 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
 #ifdef PBL_PLATFORM_EMERY
       time_format = "%I:%M %p";
 #else
-      //time_format = "%I:%M";
-      time_format = "%I:%M %p";      
+      time_format = "%I:%M";      
 #endif
 	}
 
@@ -306,7 +305,7 @@ static void do_init(void) {
 #endif
   no_bluetooth_layer = bitmap_layer_create(frame3);
   bitmap_layer_set_bitmap(no_bluetooth_layer, no_bluetooth_image);
-  //layer_add_child(window_layer, bitmap_layer_get_layer(no_bluetooth_layer));
+  layer_add_child(window_layer, bitmap_layer_get_layer(no_bluetooth_layer));
 
 	
 	
