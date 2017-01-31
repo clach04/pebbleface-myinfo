@@ -40,6 +40,7 @@ GBitmap *img_battery_20;
 GBitmap *img_battery_10;
 GBitmap *img_battery_charge;
 int charge_percent = 0;
+int refresh_interval = 5; //minutes
 
 static GBitmap *bluetooth_image;
 static BitmapLayer *bluetooth_layer;
@@ -125,7 +126,10 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
 	}
 
     strftime(time_text, sizeof(time_text), time_format, tick_time);
-    requestUpdate();
+    //requestUpdate();
+    if(tick_time->tm_min % refresh_interval == 0) {
+      requestUpdate();
+    }
 
     // Kludge to handle lack of non-padded hour format string
     // for twelve hour clock.

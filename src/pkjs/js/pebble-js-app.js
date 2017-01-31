@@ -1,17 +1,37 @@
+var xhrRequest = function (url, type, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    callback(this.responseText);
+  };
+  xhr.open(type, url);
+  xhr.send();
+};
 
 Pebble.addEventListener("ready", function(e) {
   console.log("Starting ...");
-  sendNoteContents();
+  //sendNoteContents();
+  getNoteFromLink();
 });
 
 Pebble.addEventListener("appmessage", function(e) {
-  sendNoteContents();
+  //sendNoteContents();
+  getNoteFromLink();
 });
 
 function sendNoteContents() {
   var note = localStorage.getItem('note') || '...set this using settings in Pebble App...';
   Pebble.sendAppMessage({ "note": note });
 }
+
+var getNoteFromLink = function() {
+  var url = 'https://dl.dropboxusercontent.com/u/6164111/note.txt';
+  xhrRequest(url, 'GET', function(responseText) {
+      console.log('responseText was: ' + responseText);
+      localStorage.setItem('note', responseText);
+      sendNoteContents();
+    }
+  );
+};
 
 Pebble.addEventListener('showConfiguration', function(e) {
   var note = localStorage.getItem('note') || '';
