@@ -144,6 +144,12 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
     strftime(day_text, sizeof(day_text), day_format, tick_time);
     text_layer_set_text(day_layer, day_text);
   }
+  
+  if(units_changed & HOUR_UNIT) {
+    if(tick_time->tm_hour > 7 && tick_time->tm_hour < 22) {
+      vibes_long_pulse();
+    }
+  }
 }
 
 static void in_received_handler(DictionaryIterator *iter, void *context) {
