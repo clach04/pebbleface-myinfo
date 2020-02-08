@@ -15,8 +15,8 @@ function sendNoteContents() {
 
 Pebble.addEventListener('showConfiguration', function(e) {
   var note = localStorage.getItem('note') || '';
-	var uri = 'http://www.themapman.com/pebblewatch/myinfo_slate.html?' +
-				'note=' + encodeURIComponent(note);
+	var uri = 'https://clach04.github.io/pebbleface-myinfo/myinfo_slate.html?' +
+				'note=' + encodeURIComponent(note);  // NOTE note param is currently ignored, uses local storage
 	console.log('showing configuration at uri: ' + uri);
 	Pebble.openURL(uri);
 });
