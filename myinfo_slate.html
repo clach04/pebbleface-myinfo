@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>my info configuration</title>
+  <link rel='stylesheet' type='text/css' href='css/slate.min.css'>
+  <script src='js/slate.min.js'></script>
+  <style>
+  .title {
+    padding: 10px 5px;
+    text-transform: uppercase;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 1.0em;
+    font-weight: 500;
+    color: #888888;
+    text-align: center;
+  }
+  </style>
+  </head>
+
+  <body>
+    <h4 class='title'>Settings</h4>
+
+
+<font size="3"> Use this page to set the text you would like to appear on your watch. If 3 ellipses appear at the end/bottom of your watch screen, or text is cut off (not appearing), you've entered too much text!</font>
+
+
+
+    <div class='item-container'>
+
+
+<div class="item-container">
+  <div class="item-container-header">Watch Text</div>
+  <div class="item-container-content">
+    <label class="item">
+      <div class="item-input-wrapper">
+        <textarea input id="note" type="text" class="item-input" name="input-1" rows="6" placeholder="medical info, a shopping list, events, to do lists, stuff to remember etc"></textarea>
+      </div>
+    </label>
+  </div>
+</div>
+<br>
+<font size="2" color="#888888">
+<h5>DISCLAIMER</h5>
+
+ <font size="1"> <em>The developer of this watch face takes no responsibility for the manner in which this watch face is used,  and is not responsible for any consequences that may arise from unintended use.  This watch face is made available in good faith.</em></font>
+
+
+
+    <div class='item-container'>
+      <div class='button-container'>
+        <input id='submit_button' type='button' class='item-button' value='SAVE'>
+      </div>
+    </div>
+    
+    <br>
+    <hr>
+    <br>
+<p align="center">
+  <a href="https://www.paypal.me/markchopsreed" title="Support"><img src="paypalwider.png" width="200" height="35"></a>
+    <br>
+<font size="2"><em>This watchface will continue to be free.  If you find it useful, please consider making a small donation via the link above. Thankyou.</em></font>
+
+  </body>
+  <script>
+  function getConfigData() {
+    var Note = document.getElementById('note');
+ 
+    var options = {
+      'note': Note.value
+    };
+    // Save for next launch
+    localStorage['note'] = options['note'];
+    console.log('Got options: ' + JSON.stringify(options));
+    return options;
+  }
+  function getQueryParam(variable, defaultValue) {
+    var query = location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split('=');
+      if (pair[0] === variable) {
+        return decodeURIComponent(pair[1]);
+      }
+    }
+    return defaultValue || false;
+  }
+ 
+  var submitButton = document.getElementById('submit_button');
+  submitButton.addEventListener('click', function() {
+    console.log('Submit');
+    // Set the return URL depending on the runtime environment
+    var return_to = getQueryParam('return_to', 'pebblejs://close#');
+    document.location = return_to + encodeURIComponent(JSON.stringify(getConfigData()));
+  });
+  (function() {
+    var Note = document.getElementById('note');
+    // Load any previously saved configuration, if available
+    if(localStorage['note']) {
+      Note.value = localStorage['note'];
+    }
+  })();
+  </script>
+</html>
